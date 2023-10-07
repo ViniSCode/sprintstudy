@@ -1,4 +1,4 @@
-# SprintStudy - Pomodoro Timer App
+# SprintStudy - Pomodoro Timer App (Work in progress)
 
 ![enter image description here](https://github.com/ViniSCode/sprintstudy/blob/main/public/assets/sprint-study-preview.png?raw=true)
 
