@@ -1,15 +1,15 @@
 import Link from "next/link";
-import {} from "react-icons/";
+import { FiPieChart, FiSettings } from "react-icons/fi";
 
 export function Header() {
   return (
-    <header>
-      <nav className="bg-gray-700 rounded-xl p-4 w-fit mx-auto mt-2">
+    <header className="pt-6">
+      <nav className="bg-gray-700 rounded-xl p-4 w-fit mx-auto">
         <ul className="flex items-center divide-gray-500 divide-x gap-4">
           <li>
             <Link
               href="/"
-              className="font-bold transition-colors timer flex items-center gap-0.5 hover:text-cyan-500 stroke-white hover:stroke-cyan-500 text-white"
+              className="font-bold transition-colors timer flex items-center gap-1 hover:text-cyan-500 stroke-white hover:stroke-cyan-500 text-white"
             >
               <svg
                 width="20"
@@ -31,16 +31,18 @@ export function Header() {
           <li className="pl-4">
             <Link
               href="/"
-              className="font-bold transition-colors hover:text-cyan-500"
+              className="font-bold transition-colors hover:text-cyan-500 flex items-center gap-1  stroke-white hover:stroke-cyan-500"
             >
+              <FiSettings size={20} />
               Settings
             </Link>
           </li>
           <li className="pl-4">
             <Link
               href="/"
-              className="font-bold transition-colors hover:text-cyan-500"
+              className="transition-colors  font-bold flex items-center gap-1 hover:text-cyan-500 stroke-white hover:stroke-cyan-500"
             >
+              <FiPieChart size={20} />
               Stats
             </Link>
           </li>

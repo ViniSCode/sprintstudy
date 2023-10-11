@@ -1,8 +1,10 @@
 import { Header } from "@/components/Header";
-import { DM_Sans } from "next/font/google";
+import { Providers } from "@/components/Providers";
+import { Advent_Pro, DM_Sans } from "next/font/google";
 import "./globals.css";
 
 const dm_sans = DM_Sans({ subsets: ["latin"] });
+const advent_pro = Advent_Pro({ subsets: ["latin"], variable: "--advent-pro" });
 
 export const metadata = {
   title: "Create Next App",
@@ -16,9 +18,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={dm_sans.className}>
-        <Header />
-        {children}
+      <body className={`${dm_sans.className} ${advent_pro.variable}`}>
+        <Providers>
+          <Header />
+          {children}
+        </Providers>
       </body>
     </html>
   );
