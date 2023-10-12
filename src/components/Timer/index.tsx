@@ -1,36 +1,50 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 export function CustomTimer() {
-  const [selectedTime, setSelectedTime] = useState(1);
-  const [minutes, setMinutes] = useState(selectedTime);
-  const [seconds, setSeconds] = useState(0);
+  const [selectedTime, setSelectedTime] = useState<number>(1);
+  const [minutes, setMinutes] = useState<number>(selectedTime);
+  const [seconds, setSeconds] = useState<number>(0);
+  const [isRunning, setIsRunning] = useState<boolean>(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (seconds === 0) {
-        if (minutes === 0) {
-          clearInterval(interval);
-          const audio = new Audio(
-            "https://drive.google.com/uc?export=download&id=1M95VOpto1cQ4FQHzNBaLf0WFQglrtWi7"
-          );
-          audio.play();
-          toast.success("Pomodoro timer has ended. Time for a break!");
+    let interval: NodeJS.Timeout;
+
+    if (isRunning) {
+      interval = setInterval(() => {
+        if (seconds === 0) {
+          if (minutes === 0) {
+            clearInterval(interval);
+            const audio = new Audio(
+              "https://drive.google.com/uc?export=download&id=1M95VOpto1cQ4FQHzNBaLf0WFQglrtWi7"
+            );
+            audio.play();
+            toast.success("Time for a break!");
+            setIsRunning(false);
+          } else {
+            setMinutes((m) => m - 1);
+            setSeconds(59);
+          }
         } else {
-          setMinutes((m) => m - 1);
-          setSeconds(59);
+          setSeconds((s) => s - 1);
         }
-      } else {
-        setSeconds((s) => s - 1);
-      }
-    }, 1000);
+      }, 1000);
+    }
 
     return () => clearInterval(interval);
-  }, [minutes, seconds]);
+  }, [minutes, seconds, isRunning]);
 
   useEffect(() => {
     setMinutes(selectedTime);
     setSeconds(0);
   }, [selectedTime]);
+
+  const handleStart = (): void => {
+    setIsRunning(true);
+  };
+
+  const handlePause = (): void => {
+    setIsRunning(false);
+  };
 
   const circumference = Math.PI * 100; // Circumference of the circle
 
@@ -41,8 +55,9 @@ export function CustomTimer() {
   return (
     <div className="custom-timer flex flex-col gap-10 items-center justify-center">
       <svg
-        className="relative rounded-full progress-ring w-32 h-32 md:h-80 md:w-80"
-        viewBox="0 0 120 120"
+        className="relative progress-ring w-52 h-52 md:h-96 md:w-96 rounded-full"
+        // preserveAspectRatio="none"
+        viewBox="8.5 8.5 103 103"
       >
         <circle
           className="progress-ring-circle stroke-gray-600"
@@ -54,7 +69,7 @@ export function CustomTimer() {
         />
         <circle
           className="progress-ring-progress stroke-cyan-500"
-          strokeWidth="4"
+          strokeWidth="3"
           fill="transparent"
           r="50"
           cx="60"
@@ -62,8 +77,8 @@ export function CustomTimer() {
           style={{ strokeDasharray: circumference, strokeDashoffset }}
         />
         <text
-          x="50%"
-          y="50%"
+          x="60"
+          y="60"
           textAnchor="middle"
           dy=".3em"
           className="progress-text"
@@ -71,6 +86,7 @@ export function CustomTimer() {
           {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
         </text>
       </svg>
+
       <div className="timer-controls text-base flex flex-col gap-2">
         <label htmlFor="timerSelect">Select Timer Duration (minutes):</label>
         <input
@@ -78,6 +94,7 @@ export function CustomTimer() {
           id="timerSelect"
           className="rounded-full bg-gray-600 shadow-md p-2"
           min="1"
+          disabled={isRunning}
           step="1"
           pattern="\d+"
           value={selectedTime}
@@ -87,6 +104,22 @@ export function CustomTimer() {
           }}
           onChange={(e) => setSelectedTime(parseInt(e.target.value))}
         />
+        <div className="flex gap-2 mt-2">
+          <button
+            onClick={handleStart}
+            className="bg-green-500 text-white px-4 py-2 rounded-full w-full"
+            disabled={isRunning}
+          >
+            Start
+          </button>
+          <button
+            onClick={handlePause}
+            className="bg-red-500 text-white px-4 py-2 rounded-full w-full"
+            disabled={!isRunning}
+          >
+            Pause
+          </button>
+        </div>
       </div>
     </div>
   );
