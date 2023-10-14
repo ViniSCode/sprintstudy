@@ -1,13 +1,14 @@
-import { Tab, tabs } from "@/app/page";
+import { Tab } from "@/app/page";
 import { FiPieChart, FiSettings } from "react-icons/fi";
 import { PlayIcon } from "../Icons/PlayIcon";
 
 interface HeaderProps {
   selectedTab: Tab;
   setSelectedTab: (value: Tab) => void;
+  tabs: Tab[];
 }
 
-export function Header({ setSelectedTab, selectedTab }: HeaderProps) {
+export function Header({ setSelectedTab, selectedTab, tabs }: HeaderProps) {
   return (
     <header className="pt-6">
       <nav className="bg-gray-700 rounded-xl p-4 w-fit mx-auto">

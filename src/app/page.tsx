@@ -11,7 +11,7 @@ export type Tab = {
   component?: ReactNode;
 };
 
-export const tabs: Tab[] = [
+const tabs: Tab[] = [
   {
     label: "timer",
     component: <CustomTimer />,
@@ -31,7 +31,11 @@ export default function Home() {
 
   return (
     <>
-      <Header selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+      <Header
+        selectedTab={selectedTab}
+        setSelectedTab={setSelectedTab}
+        tabs={tabs}
+      />
       <main className="flex min-h-screen flex-col items-center justify-between p-24">
         <section>
           <AnimatePresence mode="wait">
