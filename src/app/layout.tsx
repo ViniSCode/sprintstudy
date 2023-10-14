@@ -1,4 +1,3 @@
-import { Header } from "@/components/Header";
 import { Providers } from "@/components/Providers";
 import { Advent_Pro, DM_Sans } from "next/font/google";
 import "./globals.css";
@@ -19,10 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${dm_sans.className} ${advent_pro.variable}`}>
-        <Providers>
-          <Header />
-          {children}
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

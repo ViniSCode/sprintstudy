@@ -1,5 +1,6 @@
 "use client";
 
+import { TimerContextProvider } from "@/context/TimerContext";
 import { NextUIProvider } from "@nextui-org/react";
 import { ReactNode } from "react";
 import { ToastContainer } from "react-toastify";
@@ -11,8 +12,10 @@ interface ProvidersProps {
 export function Providers({ children }: ProvidersProps) {
   return (
     <NextUIProvider>
-      <ToastContainer />
-      {children}
+      <TimerContextProvider>
+        <ToastContainer />
+        {children}
+      </TimerContextProvider>
     </NextUIProvider>
   );
 }

@@ -1,10 +1,21 @@
-import { useEffect, useState } from "react";
+import { useTimer } from "@/hooks/useTimer";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect } from "react";
 import { toast } from "react-toastify";
+import { PauseIcon } from "../Icons/PauseIcon";
+import { PlayIcon } from "../Icons/PlayIcon";
+
 export function CustomTimer() {
-  const [selectedTime, setSelectedTime] = useState<number>(1);
-  const [minutes, setMinutes] = useState<number>(selectedTime);
-  const [seconds, setSeconds] = useState<number>(0);
-  const [isRunning, setIsRunning] = useState<boolean>(false);
+  const {
+    selectedTime,
+    setSelectedTime,
+    minutes,
+    setMinutes,
+    seconds,
+    setSeconds,
+    isRunning,
+    setIsRunning,
+  } = useTimer();
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -14,18 +25,39 @@ export function CustomTimer() {
         if (seconds === 0) {
           if (minutes === 0) {
             clearInterval(interval);
-            const audio = new Audio(
-              "https://drive.google.com/uc?export=download&id=1M95VOpto1cQ4FQHzNBaLf0WFQglrtWi7"
-            );
-            audio.play();
+
+            if (Notification.permission === "granted") {
+              new Notification("Timer Ended", {
+                body: "Time for a break!",
+                icon: "/favicon.svg",
+              });
+            } else if (Notification.permission !== "denied") {
+              Notification.requestPermission().then((permission) => {
+                if (permission === "granted") {
+                  new Notification("Timer Ended", {
+                    body: "Time for a break!",
+                    icon: "/favicon.svg",
+                  });
+                } else {
+                  toast.error(
+                    "You've disabled notifications. Please enable them to receive timer alerts."
+                  );
+                }
+              });
+            } else {
+              toast.error(
+                "You've disabled notifications. Please enable them to receive timer alerts."
+              );
+            }
+
             toast.success("Time for a break!");
             setIsRunning(false);
           } else {
-            setMinutes((m) => m - 1);
+            setMinutes(minutes - 1);
             setSeconds(59);
           }
         } else {
-          setSeconds((s) => s - 1);
+          setSeconds(seconds - 1);
         }
       }, 1000);
     }
@@ -56,7 +88,6 @@ export function CustomTimer() {
     <div className="custom-timer flex flex-col gap-10 items-center justify-center">
       <svg
         className="relative progress-ring w-52 h-52 md:h-96 md:w-96 rounded-full"
-        // preserveAspectRatio="none"
         viewBox="8.5 8.5 103 103"
       >
         <circle
@@ -87,39 +118,62 @@ export function CustomTimer() {
         </text>
       </svg>
 
-      <div className="timer-controls text-base flex flex-col gap-2">
-        <label htmlFor="timerSelect">Select Timer Duration (minutes):</label>
-        <input
-          type="number"
-          id="timerSelect"
-          className="rounded-full bg-gray-600 shadow-md p-2"
-          min="1"
-          disabled={isRunning}
-          step="1"
-          pattern="\d+"
-          value={selectedTime}
-          onInput={(e) => {
-            const target = e.target as HTMLInputElement;
-            target.value = Math.max(1, parseInt(target.value) || 1).toString();
-          }}
-          onChange={(e) => setSelectedTime(parseInt(e.target.value))}
-        />
-        <div className="flex gap-2 mt-2">
-          <button
-            onClick={handleStart}
-            className="bg-green-500 text-white px-4 py-2 rounded-full w-full"
+      <div className="timer-controls text-base flex flex-col items-center justify-center gap-2">
+        <motion.div className="mt-2 bg-gray-700 rounded-xl w-fit p-3 py-2">
+          <AnimatePresence mode="wait">
+            {isRunning ? (
+              <motion.button
+                key="pause"
+                aria-label="Pause Button"
+                onClick={handlePause}
+                className="text-[0] stroke-gray-500 hover:stroke-white transition-colors rounded-sm p-1 w-fit"
+                disabled={!isRunning}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <PauseIcon height="40" width="40" />
+              </motion.button>
+            ) : (
+              <motion.button
+                key="start"
+                aria-label="Start Button"
+                onClick={handleStart}
+                className="text-[0] stroke-gray-500 hover:stroke-white transition-colors text-white rounded-sm p-1 w-fit "
+                disabled={isRunning}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <PlayIcon height="40" width="40" />
+              </motion.button>
+            )}
+          </AnimatePresence>
+        </motion.div>
+
+        {/* <div className="mt-10 flex flex-col gap-2">
+          <label htmlFor="timerSelect">Select Timer Duration (minutes):</label>
+          <input
+            type="number"
+            id="timerSelect"
+            className="rounded-full bg-gray-600 shadow-md p-2"
+            min="0"
             disabled={isRunning}
-          >
-            Start
-          </button>
-          <button
-            onClick={handlePause}
-            className="bg-red-500 text-white px-4 py-2 rounded-full w-full"
-            disabled={!isRunning}
-          >
-            Pause
-          </button>
-        </div>
+            step="1"
+            pattern="\d+"
+            value={selectedTime} // This should be updated if you're using seconds or a different format
+            onInput={(e) => {
+              const target = e.target as HTMLInputElement;
+              target.value = Math.max(
+                0,
+                parseInt(target.value) || 0
+              ).toString();
+            }}
+            onChange={(e) => setSelectedTime(parseInt(e.target.value))}
+          />
+        </div> */}
       </div>
     </div>
   );

@@ -1,50 +1,57 @@
-import Link from "next/link";
+import { Tab, tabs } from "@/app/page";
 import { FiPieChart, FiSettings } from "react-icons/fi";
+import { PlayIcon } from "../Icons/PlayIcon";
 
-export function Header() {
+interface HeaderProps {
+  selectedTab: Tab;
+  setSelectedTab: (value: Tab) => void;
+}
+
+export function Header({ setSelectedTab, selectedTab }: HeaderProps) {
   return (
     <header className="pt-6">
       <nav className="bg-gray-700 rounded-xl p-4 w-fit mx-auto">
         <ul className="flex items-center divide-gray-500 divide-x gap-4">
           <li>
-            <Link
-              href="/"
-              className="font-bold transition-colors timer flex items-center gap-1 hover:text-cyan-500 stroke-white hover:stroke-cyan-500 text-white"
+            <div
+              onClick={() => setSelectedTab(tabs[0])}
+              className={`cursor-pointer font-bold transition-colors timer flex items-center gap-1 hover:text-cyan-500 hover:stroke-cyan-500 ${
+                selectedTab.label === "timer"
+                  ? "stroke-cyan-500 text-cyan-500"
+                  : "stroke-gray-500 text-gray-500"
+              }`}
             >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M3.35983 12.1393V18.7765C3.35983 20.9771 5.77389 22.3671 7.73924 21.2991L10.7906 19.6396M3.35983 8.32859V5.50203C3.35983 3.30138 5.77389 1.91144 7.73924 2.97937L19.9448 9.61755C20.4024 9.86087 20.7851 10.2241 21.052 10.6683C21.3189 11.1125 21.4599 11.621 21.4599 12.1393C21.4599 12.6575 21.3189 13.166 21.052 13.6102C20.7851 14.0544 20.4024 14.4176 19.9448 14.661L13.842 17.9801"
-                  // stroke="white"
-                  strokeWidth="1.429"
-                  strokeLinecap="round"
-                />
-              </svg>
+              <PlayIcon height="20" width="20" />
               Timer
-            </Link>
+            </div>
           </li>
           <li className="pl-4">
-            <Link
-              href="/"
-              className="font-bold transition-colors hover:text-cyan-500 flex items-center gap-1  stroke-white hover:stroke-cyan-500"
+            <div
+              onClick={() => setSelectedTab(tabs[1])}
+              className={`cursor-pointer font-bold transition-colors hover:text-cyan-500 flex items-center gap-1  stroke-white hover:stroke-cyan-500 ${
+                selectedTab.label === "settings"
+                  ? "stroke-cyan-500 text-cyan-500"
+                  : "stroke-gray-500 text-gray-500"
+              }`}
             >
               <FiSettings size={20} />
               Settings
-            </Link>
+            </div>
           </li>
           <li className="pl-4">
-            <Link
-              href="/"
-              className="transition-colors  font-bold flex items-center gap-1 hover:text-cyan-500 stroke-white hover:stroke-cyan-500"
+            <div
+              onClick={() => setSelectedTab(tabs[2])}
+              className={`cursor-pointer transition-colors  font-bold flex items-center gap-1 hover:text-cyan-500 stroke-white hover:stroke-cyan-500
+              ${
+                selectedTab.label === "stats"
+                  ? "stroke-cyan-500 text-cyan-500"
+                  : "stroke-gray-500 text-gray-500"
+              }
+              `}
             >
               <FiPieChart size={20} />
               Stats
-            </Link>
+            </div>
           </li>
         </ul>
       </nav>
